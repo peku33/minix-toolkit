@@ -67,10 +67,14 @@ run_minix()
 # Tworzona jest kopia z nazwą zawierającą aktualną datę
 image_create_backup()
 {
+	if ! test -f ./backups/
+	then
+		mkdir backups
+	fi
 	if test -f $MINIX_CUR_NAME
 	then
 		BACKUP_TIMESTAMP=`$CREATE_DATE_CMD`
-		BACKUP_FILENAME="${MINIX_CUR_NAME}_${BACKUP_TIMESTAMP}"
+		BACKUP_FILENAME="./backups/${MINIX_CUR_NAME}_${BACKUP_TIMESTAMP}"
 		cp -v $MINIX_CUR_NAME $BACKUP_FILENAME
 	fi
 	
@@ -172,7 +176,7 @@ do
 		"4")
 			# Lista wszystkich obrazów które mogą zostać przywrócone
 			CANCEL_NAME='Anuluj'
-			FILES_AVAILIBLE=`ls -t ${MINIX_CUR_NAME}_*`
+			FILES_AVAILIBLE=`ls -t ./backups/${MINIX_CUR_NAME}_*`
 			
 			# Super polecenie select oszczędza kupę roboty - wyświetla listę i pozwala wybrać
 			select FILE_NAME in $CANCEL_NAME $FILES_AVAILIBLE
