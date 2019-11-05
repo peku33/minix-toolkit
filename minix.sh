@@ -217,7 +217,7 @@ do
 					# Nazwa docelowego zip'a
 					ZIP_NAME="minix_diff_`$CREATE_DATE_CMD`.zip"
 					# Stwórz archiwum, ale tylko z plików, dla których file pokazuje, że się nadają.
-					echo ${FILES_DIFF[@]} | xargs file --separator '' | grep -iv 'executable' | awk '{print substr($1, 0, length($1))}' | $ZIP_CMD $ZIP_NAME -@
+					echo ${FILES_DIFF[@]} | xargs file --separator '' | grep -iv 'executable' | awk '{print substr($1, 0, length($1)+1)}' | $ZIP_CMD $ZIP_NAME -@
 					
 					echo "-> Utworzone archiwum: $ZIP_NAME"
 				else
