@@ -73,7 +73,7 @@ image_create_named_backup()
 	fi
 	if test -f $MINIX_CUR_NAME
 	then
-		read -p 'Wpisz nazwe kopii: ' BACKUP_NAME
+		read -p 'Wpisz nazwe kopii (nie podawaj nazwy, jeżeli chcesz, aby kopia miała automatycznie przydzielaną nazwę): ' BACKUP_NAME
 		if [ -z $BACKUP_NAME ]
 			then
 			image_create_backup
@@ -113,6 +113,7 @@ image_create_backup()
 
 	if [ "$backups_num" -gt 5 ]
 	then
+		echo "-> Usunięto starą kopię zapasową o nazwie: `find ./backups/auto/* | head -n 1`"
 		find ./backups/auto/* | head -n 1 | xargs rm
 	fi
 }
@@ -211,7 +212,7 @@ do
 		"4")
 			# Lista wszystkich obrazów które mogą zostać przywrócone
 			CANCEL_NAME='Anuluj'
-			FILES_AVAILIBLE=`ls -t ./backups/`
+			FILES_AVAILIBLE=`find ./backups/* -type f`
 			
 			# Super polecenie select oszczędza kupę roboty - wyświetla listę i pozwala wybrać
 			select FILE_NAME in $CANCEL_NAME $FILES_AVAILIBLE
