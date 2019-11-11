@@ -108,7 +108,9 @@ image_create_backup()
 		TEMP_BACKUP_FILENAME="./backups/auto/${MINIX_CUR_NAME}_${BACKUP_TIMESTAMP}"
 		cp -v $MINIX_CUR_NAME $TEMP_BACKUP_FILENAME
 	fi
+
 	backups_num=`ls -1 ./backups/auto/ | wc -l`
+
 	if [ "$backups_num" -gt 5 ]
 	then
 		find ./backups/auto/* | head -n 1 | xargs rm
