@@ -78,7 +78,7 @@ image_create_backup()
 		cp -v $MINIX_CUR_NAME $BACKUP_FILENAME
 	fi
 	backups_num=`ls -1 ./backups/ | wc -l`
-	if [ "$backups_num" -g 5 ]
+	if [ "$backups_num" -gt 5 ]
 	then
 		find ./backups/* | head -n 1 | xargs rm
 	fi
