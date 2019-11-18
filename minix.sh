@@ -69,7 +69,7 @@ image_create_named_backup()
 {
 	if ! test -d ./backups/
 	then
-		mkdir -m 777 backups >/dev/null
+		mkdir backups >/dev/null
 	fi
 	if test -f $MINIX_CUR_NAME
 	then
@@ -100,7 +100,7 @@ image_create_backup()
 {
 	if ! test -d ./backups/auto
 	then
-		mkdir -m 777 backups/auto >/dev/null
+		mkdir backups/auto >/dev/null
 	fi
 	if test -f $MINIX_CUR_NAME
 	then
