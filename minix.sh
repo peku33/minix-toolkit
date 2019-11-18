@@ -64,19 +64,59 @@ run_minix()
 }
 
 # Backupuje aktualny obraz
+# Tworzona jest kopia z nazwą użytkownika
+image_create_named_backup()
+{
+	if ! test -d ./backups/
+	then
+		mkdir backups >/dev/null
+	fi
+	if test -f $MINIX_CUR_NAME
+	then
+		read -p 'Wpisz nazwe kopii (nie podawaj nazwy, jeżeli chcesz, aby kopia miała automatycznie przydzielaną nazwę): ' BACKUP_NAME
+		if [ -z $BACKUP_NAME ]
+			then
+			image_create_backup
+			return
+		else
+		if [ -e ./backups/$BACKUP_NAME ]
+		then
+			echo "!!! Taka nazwa juz istnije !!!"	
+			echo "!!! Nie utworzono kopii !!!"
+			return
+		else
+			BACKUP_FILENAME="./backups/$BACKUP_NAME"		
+		cp -v $MINIX_CUR_NAME $BACKUP_FILENAME
+		echo "-> Utworzono backup obecnej wersji pod nazwą $BACKUP_FILENAME"
+		fi
+		fi
+	fi
+	
+	
+}
+# Backupuje aktualny obraz
 # Tworzona jest kopia z nazwą zawierającą aktualną datę
 image_create_backup()
 {
+	if ! test -d ./backups/auto
+	then
+		mkdir backups/auto >/dev/null
+	fi
 	if test -f $MINIX_CUR_NAME
 	then
 		BACKUP_TIMESTAMP=`$CREATE_DATE_CMD`
-		BACKUP_FILENAME="${MINIX_CUR_NAME}_${BACKUP_TIMESTAMP}"
-		cp -v $MINIX_CUR_NAME $BACKUP_FILENAME
+		TEMP_BACKUP_FILENAME="./backups/auto/${MINIX_CUR_NAME}_${BACKUP_TIMESTAMP}"
+		cp -v $MINIX_CUR_NAME $TEMP_BACKUP_FILENAME
 	fi
-	
-	echo "-> Utworzono backup obecnej wersji pod nazwą $BACKUP_FILENAME"
-}
 
+	backups_num=`ls -1 ./backups/auto/ | wc -l`
+
+	if [ "$backups_num" -gt 5 ]
+	then
+		echo "-> Usunięto starą kopię zapasową o nazwie: `find ./backups/auto/* | head -n 1`"
+		find ./backups/auto/* | head -n 1 | xargs rm
+	fi
+}
 # Zamontuj obraz minixa w katalogu roboczym
 # Działanie qemu kiedy obraz jest zamontowany jest (dla mnie) nieznane - po zmianach odmontowuję obraz
 mount_image()
@@ -146,7 +186,7 @@ do
 			# Odmintuj obraz, aby zapisać zmiany
 			umount_image
 			# Stwórz kopię
-			image_create_backup
+			image_create_named_backup
 			# Zamontuj z powrotem obraz do pracy
 			mount_image
 			;;
@@ -172,7 +212,7 @@ do
 		"4")
 			# Lista wszystkich obrazów które mogą zostać przywrócone
 			CANCEL_NAME='Anuluj'
-			FILES_AVAILIBLE=`ls -t ${MINIX_CUR_NAME}_*`
+			FILES_AVAILIBLE=`find ./backups/* -type f`
 			
 			# Super polecenie select oszczędza kupę roboty - wyświetla listę i pozwala wybrać
 			select FILE_NAME in $CANCEL_NAME $FILES_AVAILIBLE
