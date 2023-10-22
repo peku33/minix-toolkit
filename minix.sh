@@ -100,7 +100,7 @@ image_create_backup()
 {
 	if ! test -d ./backups/auto
 	then
-		mkdir backups/auto >/dev/null
+		mkdir -p backups/auto >/dev/null
 	fi
 	if test -f $MINIX_CUR_NAME
 	then
