@@ -10,6 +10,7 @@
 ######################################################
 
 QEMU_CMD='qemu-system-i386'																# Nazwa polecenia emulatoara
+QEMU_PARAMS='-display curses -drive format=raw,file='									# Parametry polecenia emulatora
 ZIP_CMD='zip'																			# Komenda służąca do tworzenia archiwum
 CREATE_DATE_CMD="date +%Y_%m_%d_%H_%M_%S"												# Polecenie tworzące datę w postaci którą można zawrzeć w nazwie pliku
 MINIX_MOUNT_CMD='mount -t minix -o loop,offset=1483776'									# Polecenie montujące dla minixa
@@ -60,7 +61,7 @@ mkdir -p $MINIX_USR_LOCAL_DIR
 # Uruchom minixa.
 run_minix()
 {
-	$QEMU_CMD $MINIX_CUR_NAME
+	$QEMU_CMD $QEMU_PARAMS$MINIX_CUR_NAME
 }
 
 # Backupuje aktualny obraz
